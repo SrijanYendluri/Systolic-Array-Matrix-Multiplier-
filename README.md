@@ -17,4 +17,7 @@
 - example_use.py
   - clean example to show you how it works
 
-Since this was a month long project it is only 4X4 matrix and only 8 bits I aim to make it more usefull overtime.  
+Since this is an active personal project it is only 4X4 matrix and only 8 bits for now I aim to impliment more complex protocols as I learn.  
+
+## Systollic array UVC
+![Drawing 2025-07-30 10 59 49 excalidraw](https://github.com/user-attachments/assets/f1acf7d0-6aad-4292-9a58-dcf4aa1be77d)
