@@ -1,3 +1,8 @@
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg :: *;
+
+
 class mac_agent extends uvm_agent;
     `uvm_component_utils(mac_agent)
     function new(string name = "mac_agent", uvm_component parent = null);

@@ -1,21 +1,33 @@
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg :: *;
+
 typedef enum {NORMAL, OVERFLOW} VALUES;
 
 
 class mac_packet extends uvm_sequence_item;
 
-  logic st_rst;
+  rand logic st_rst;
   rand logic [31:0] A [0:3];
   rand logic [31:0] B [0:3];
   logic [15:0] C [0:3][0:3];
   logic completed;
   VALUES pkt_type; 
   
+  static int pkt_number;
+  
   function new(string name = "mac_packet");
     super.new(name);
   endfunction
   
   `uvm_object_utils_begin(mac_packet)
+
+
+ `uvm_field_int( pkt_number, UVM_DEFAULT)
+
   `uvm_field_int(st_rst, UVM_DEFAULT)
+
+ 
   
   `uvm_field_sarray_int(A, UVM_DEFAULT)
 
@@ -25,7 +37,10 @@ class mac_packet extends uvm_sequence_item;
 //   `uvm_field_sarray_int(B[2], UVM_DEFAULT || UVM_DEC)
 //   `uvm_field_sarray_int(B[3], UVM_DEFAULT || UVM_DEC)
   
-//   `uvm_field_sarray_int(C, UVM_DEFAULT)
+  `uvm_field_sarray_int(C[0], UVM_DEFAULT)
+  `uvm_field_sarray_int(C[1], UVM_DEFAULT)
+  `uvm_field_sarray_int(C[2], UVM_DEFAULT)
+  `uvm_field_sarray_int(C[3], UVM_DEFAULT)
 //   `uvm_field_sarray_int(C[1], UVM_DEFAULT || UVM_DEC)
 //   `uvm_field_sarray_int(C[2], UVM_DEFAULT || UVM_DEC)
 //   `uvm_field_sarray_int(C[3], UVM_DEFAULT || UVM_DEC)
@@ -71,15 +86,15 @@ class mac_packet extends uvm_sequence_item;
     	
   
   function void post_randomize();
-	int i;
-    int j;
-    int k;
+//	int i;
+//    int j;
+   
     
-    foreach(C[i][j]) begin 
+//    foreach(C[i][j]) begin 
     
-      C[i][j] = '0;	
-    end
-    
+//      C[i][j] = '0;	
+//    end
+    pkt_number = pkt_number + 1; 
   endfunction
   
   

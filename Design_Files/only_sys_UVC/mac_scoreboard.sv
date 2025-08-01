@@ -31,7 +31,7 @@ endfunction
 
 mac_packet mac_pkt;
 
-tlm_analysis_fifo #(mac_packet) scoreboard_expo_fifo;
+uvm_tlm_analysis_fifo #(mac_packet) scoreboard_expo_fifo;
 
 function void build_phase (uvm_phase phase);
 
@@ -48,6 +48,8 @@ task run_phase (uvm_phase phase);
       scoreboard_expo_fifo.get(mac_pkt);  
 
       `uvm_info(get_type_name(), $sformatf("Recieved form the monitor %s", mac_pkt.sprint()), UVM_NONE)
+          
+    $display("===============================================================================================");
     
 
     end

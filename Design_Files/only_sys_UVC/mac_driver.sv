@@ -1,3 +1,7 @@
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg :: *;
+
 class mac_driver extends uvm_driver#(mac_packet);
   
   `uvm_component_utils(mac_driver)
@@ -20,6 +24,7 @@ class mac_driver extends uvm_driver#(mac_packet);
     
   endfunction : build_phase
   
+  static bit quick_rst = 0;
   
   task run_phase(uvm_phase phase);
     forever begin 
@@ -37,17 +42,28 @@ class mac_driver extends uvm_driver#(mac_packet);
   
   
   task drive_dut(mac_packet mp); 
+
+  
+
+    if(quick_rst) begin
+
+      @(posedge scif.clk);
+      `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
+      scif.st_rst <= mp.st_rst;
+      scif.A <= mp.A;
+      scif.B <= mp.B;
+      wait(scif.completed);
+      scif.st_rst <= 1'b1;
+      repeat(2)@(posedge scif.clk);
+
+    end else begin 
+      scif.st_rst <= 1;
+      repeat(2)@ (posedge scif.clk);
+      quick_rst = 1;
+
+    end
     
-    @(posedge scif.clk);
-    `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
-    scif.st_rst <= 1;
-    scif.A <= mp.A;
-    scif.B <= mp.B;
-    wait(scif.completed);
-    scif.st_rst <= 0;
-    repeat(5)@(posedge scif.clk);
-    
-    
+    $display("===============================================================================================");
     `uvm_info(get_type_name(), $sformatf("trns %s", mp.sprint()),UVM_NONE);
     
   endtask
