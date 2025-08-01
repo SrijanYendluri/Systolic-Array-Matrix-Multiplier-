@@ -1,0 +1,44 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Sat Jul 19 21:40:17 2025
+# Process ID         : 19176
+# Current directory  : C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator
+# Command line       : vivado.exe -gui_launcher_event rodinguilauncherevent24172 C:\Users\Dhruv\Desktop\FPGA-ACC-MAC\matmul_acclerator\matmul_acclerator.xpr
+# Log file           : C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/vivado.log
+# Journal file       : C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator\vivado.jou
+# Running On         : DESKTOP-8NFLPRC
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : 13th Gen Intel(R) Core(TM) i7-13650HX
+# CPU Frequency      : 2803 MHz
+# CPU Physical cores : 14
+# CPU Logical cores  : 20
+# Host memory        : 33960 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 36107 MB
+# Available Virtual  : 21776 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.xpr
+update_compile_order -fileset sources_1
+launch_runs impl_1 -to_step write_bitstream -jobs 15
+wait_on_run impl_1
+open_hw_manager
+connect_hw_server -allow_non_jtag
+open_hw_target
+current_hw_device [get_hw_devices xc7a35t_0]
+refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xc7a35t_0] 0]
+copy_run -name synth_1_copy_1 [get_runs synth_1] 
+set_property board_part digilentinc.com:basys3:part0:1.2 [current_project]
+reset_run synth_1
+delete_runs "synth_1_copy_1"
+launch_runs impl_1 -to_step write_bitstream -jobs 15
+wait_on_run impl_1
+set_property PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property FULL_PROBES.FILE {} [get_hw_devices xc7a35t_0]
+set_property PROGRAM.FILE {C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.runs/impl_1/top.bit} [get_hw_devices xc7a35t_0]
+program_hw_devices [get_hw_devices xc7a35t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a35t_0] 0]

@@ -1,0 +1,90 @@
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
+`include "mac_uvc_pkg.sv"
+import mac_uvc_pkg :: *;
+
+`timescale 1ns/1ps
+
+
+
+class mac_test extends uvm_test;
+`uvm_component_utils(mac_test)
+
+function new (string name = "uvm_test", uvm_component parent = null);
+    super.new(name, parent);
+endfunction
+
+mac_sequence mac_seq;
+mac_agent agent;
+
+
+
+function void build_phase (uvm_phase phase);
+    super.build_phase(phase);
+
+    mac_seq = mac_sequence :: type_id :: create("mac_seq");
+    agent = mac_agent :: type_id :: create("agent", this);
+endfunction
+  
+  
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+
+    mac_seq.start(agent.mac_sequencer);
+
+    phase.drop_objection(this);
+  endtask
+  
+  function void end_of_elaboration_phase(uvm_phase phase);
+  	    super.end_of_elaboration_phase(phase);
+    uvm_top.print_topology();
+  endfunction
+
+  
+endclass
+
+
+// module tb_packetchk;
+//   mac_packet pkt;
+//   initial begin 
+//     pkt = new();
+//     pkt.pkt_type = OVERFLOW;
+//     assert(pkt.randomize);
+//     pkt.print();
+//   end 
+  
+// endmodule
+
+
+
+module tb_driver();
+  
+  mac_driver driver;
+  sc_if scif();
+
+  initial begin
+    scif.clk = 0;
+  end
+  
+  always #5 scif.clk = ~scif.clk;
+  
+  
+  systolic_controller design_dut (
+    .clk(scif.clk),
+    .st_rst(scif.st_rst),
+    .A(scif.A),
+    .B(scif.B),
+    .C(scif.C),
+    .completed(scif.completed)
+  );
+  
+  initial begin 
+    
+    uvm_config_db#(virtual sc_if)::set(null,"*.interface","scif",scif);
+     
+    run_test("mac_test");
+    
+  end
+  
+endmodule

@@ -1,0 +1,26 @@
+Vivado Simulator v2025.1.0
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/Xilinx/2025.1/Vivado/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot top_behav xil_defaultlib.top xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'a_or_b' [C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.srcs/sources_1/imports/Working_files _ mac/systolic_controller.sv:36]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'a_or_b' [C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.srcs/sources_1/imports/Working_files _ mac/systolic_controller.sv:46]
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4100] "C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "C:/Users/Dhruv/Desktop/FPGA-ACC-MAC/matmul_acclerator/matmul_acclerator.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.uart_rx_default
+Compiling module xil_defaultlib.mem_loader
+Compiling module xil_defaultlib.data_aligner
+Compiling module xil_defaultlib.mac_cell
+Compiling module xil_defaultlib.systolic_array_core
+Compiling module xil_defaultlib.systolic_controller
+Compiling module xil_defaultlib.matrix_uart_tx
+Compiling module xil_defaultlib.main_controller
+Compiling module xil_defaultlib.top
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot top_behav
