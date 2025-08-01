@@ -1,4 +1,6 @@
-
+`timescale 1ns / 1ps
+`include "uvm_macros.svh"
+import uvm_pkg :: *;
 
 
 class mac_monitor extends uvm_monitor;
@@ -29,10 +31,14 @@ class mac_monitor extends uvm_monitor;
     forever begin 
 
         wait(scif.st_rst);
-        macpkt.A <= scif.A;
-        macpkt.B <= scif.B;
+        #1;     
+        macpkt.st_rst = scif.st_rst;
+        macpkt.A = scif.A;
+        macpkt.B = scif.B;
         wait(scif.completed);
-        macpkt.C <= scif.C;
+        macpkt.completed = scif.completed;
+        #1;
+        macpkt.C = scif.C;
 
         mac_analysis_port.write(macpkt);
       `uvm_info(get_type_name(), $sformatf("sent to scoreboard: %0s", macpkt.sprint()), UVM_NONE);

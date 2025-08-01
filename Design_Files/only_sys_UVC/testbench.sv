@@ -1,3 +1,5 @@
+
+`timescale 1ns / 1ps
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 
@@ -16,7 +18,7 @@ function new (string name = "uvm_test", uvm_component parent = null);
 endfunction
 
 mac_sequence mac_seq;
-mac_agent agent;
+mac_env env;
 
 
 
@@ -24,14 +26,14 @@ function void build_phase (uvm_phase phase);
     super.build_phase(phase);
 
     mac_seq = mac_sequence :: type_id :: create("mac_seq");
-    agent = mac_agent :: type_id :: create("agent", this);
+    env = mac_env :: type_id :: create("env", this);
 endfunction
   
   
   task run_phase(uvm_phase phase);
     phase.raise_objection(this);
 
-    mac_seq.start(agent.mac_sequencer);
+    mac_seq.start(env.mac_agnt.mac_sequencer);
 
     phase.drop_objection(this);
   endtask
