@@ -10,7 +10,7 @@ class mac_monitor extends uvm_monitor;
     super.new(name, parent);
   endfunction
   
-  mac_packet macpkt;
+  mac_packet macpkt, temp_pkt;
   uvm_analysis_port#(mac_packet) mac_analysis_port;
   virtual sc_if scif;
 
@@ -19,29 +19,27 @@ class mac_monitor extends uvm_monitor;
 
     mac_analysis_port = new("mac_analysis_port",this);
     macpkt = mac_packet :: type_id :: create("macpkt");
+    temp_pkt = mac_packet :: type_id :: create("temp_pkt");
 
     assert(uvm_config_db#(virtual sc_if)::get(this,"interface","scif",scif)) else 
     begin 
       `uvm_error(get_type_name(), "Interfaces did not init") 
         end
 
-  endfunction
+  endfunction : build_phase
 
   task run_phase (uvm_phase phase);
     forever begin 
-
-        wait(scif.st_rst);
-        #1;     
+        @(posedge scif.completed);
         macpkt.st_rst = scif.st_rst;
         macpkt.A = scif.A;
         macpkt.B = scif.B;
-        wait(scif.completed);
         macpkt.completed = scif.completed;
-        #1;
         macpkt.C = scif.C;
-
-        mac_analysis_port.write(macpkt);
-      `uvm_info(get_type_name(), $sformatf("sent to scoreboard: %0s", macpkt.sprint()), UVM_NONE);
+        $cast(temp_pkt, macpkt.clone());
+        mac_analysis_port.write(temp_pkt);
+        #1;
+      // `uvm_info(get_type_name(), $sformatf("sent to scoreboard: %0s", macpkt.sprint()), UVM_NONE);
     end
   endtask 
   

@@ -45,7 +45,7 @@ class mac_env extends uvm_env;
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
-        mac_agnt.mac_mon.mac_analysis_port.connect(mac_scb.scoreboard_expo_fifo.analysis_export);
+        mac_agnt.mac_mon.mac_analysis_port.connect(mac_scb.scoreboard_imp);
         
     endfunction
 

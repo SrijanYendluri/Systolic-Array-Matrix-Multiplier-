@@ -18,6 +18,7 @@ function new (string name = "uvm_test", uvm_component parent = null);
 endfunction
 
 mac_sequence mac_seq;
+mac_sequence_verified mac_seq_known;
 mac_env env;
 
 
@@ -26,16 +27,19 @@ function void build_phase (uvm_phase phase);
     super.build_phase(phase);
 
     mac_seq = mac_sequence :: type_id :: create("mac_seq");
+    mac_seq_known = mac_sequence_verified :: type_id :: create("mac_seq_known");
     env = mac_env :: type_id :: create("env", this);
 endfunction
   
   
   task run_phase(uvm_phase phase);
-    phase.raise_objection(this);
+    phase.raise_objection(this, "Raised objection at test");
 
+    mac_seq_known.start(env.mac_agnt.mac_sequencer);
     mac_seq.start(env.mac_agnt.mac_sequencer);
-
-    phase.drop_objection(this);
+    
+    #100;
+    phase.drop_objection(this, "Dropped objection at test");
   endtask
   
   function void end_of_elaboration_phase(uvm_phase phase);

@@ -14,7 +14,8 @@ class mac_packet extends uvm_sequence_item;
   logic completed;
   VALUES pkt_type; 
   
-  static int pkt_number;
+  
+  static int pkt_number = 0;
   
   function new(string name = "mac_packet");
     super.new(name);
@@ -94,7 +95,8 @@ class mac_packet extends uvm_sequence_item;
     
 //      C[i][j] = '0;	
 //    end
-    pkt_number = pkt_number + 1; 
+    
+    pkt_number = pkt_number + 1;
   endfunction
   
   

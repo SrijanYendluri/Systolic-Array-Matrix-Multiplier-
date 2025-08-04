@@ -26,26 +26,43 @@ class mac_driver extends uvm_driver#(mac_packet);
   
   static bit quick_rst = 0;
   
+
+
+
+
+
   task run_phase(uvm_phase phase);
-    forever begin 
-  mac_packet mp;
+     
+  
+    
+    
+      // `uvm_error(get_type_name(),"ResetPhase start")
+    phase.raise_objection(this);
+      
+         @ (posedge scif.clk);
+        scif.st_rst <= 1;
+          repeat(3)@ (negedge scif.clk);
+
+    phase.drop_objection(this);
+    
+    forever begin
+
+    // `uvm_error(get_type_name(),"ResetPhase ended")
+    mac_packet mp;
     mp = mac_packet :: type_id:: create("mp");
     seq_item_port.get_next_item(mp);
-    
+
+    // `uvm_error(get_type_name(),"Sequenvcer started")
     
     drive_dut(mp);
   	
-  
     seq_item_port.item_done();
     end
+ 
   endtask
   
   
   task drive_dut(mac_packet mp); 
-
-  
-
-    if(quick_rst) begin
 
       @(posedge scif.clk);
       `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
@@ -54,17 +71,10 @@ class mac_driver extends uvm_driver#(mac_packet);
       scif.B <= mp.B;
       wait(scif.completed);
       scif.st_rst <= 1'b1;
-      repeat(2)@(posedge scif.clk);
-
-    end else begin 
-      scif.st_rst <= 1;
-      repeat(2)@ (posedge scif.clk);
-      quick_rst = 1;
-
-    end
+      @(posedge scif.clk);
     
     $display("===============================================================================================");
-    `uvm_info(get_type_name(), $sformatf("trns %s", mp.sprint()),UVM_NONE);
+    // `uvm_info(get_type_name(), $sformatf("trns %s", mp.sprint()),UVM_NONE);
     
   endtask
   
