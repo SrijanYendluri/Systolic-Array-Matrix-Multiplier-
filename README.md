@@ -9,7 +9,10 @@
   - Run the vivado file to directly open the proj
   - there is Bitstream file already generated that works on BASYS3 only
 - Design file
-  - All the .sv and constraint files seperately provided 
+  - All the .sv and constraint files seperately provided
+  - mac_UVC
+    -  EDA Playground : https://edaplayground.com/x/ZJis
+    -  .sv files also avaliable for the UVC 
 - Test_Bench.py
   - run this once the FPGA is ready and comports are connected    
 - fpga_frimware.py
