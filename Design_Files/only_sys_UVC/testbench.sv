@@ -6,50 +6,49 @@ import uvm_pkg::*;
 `include "mac_uvc_pkg.sv"
 import mac_uvc_pkg :: *;
 
-`timescale 1ns/1ps
-
 
 
 class mac_test extends uvm_test;
-`uvm_component_utils(mac_test)
+    `uvm_component_utils(mac_test)
 
-function new (string name = "uvm_test", uvm_component parent = null);
+    mac_sequence mac_seq;
+    mac_sequence_verified mac_seq_known;
+    mac_env env;
+
+    extern function new (string name = "uvm_test", uvm_component parent = null);
+    extern function void build_phase (uvm_phase phase);
+    extern task run_phase(uvm_phase phase);
+    extern function void end_of_elaboration_phase(uvm_phase phase);
+endclass : mac_test
+
+
+function mac_test::new (string name = "uvm_test", uvm_component parent = null);
     super.new(name, parent);
-endfunction
+endfunction : new
 
-mac_sequence mac_seq;
-mac_sequence_verified mac_seq_known;
-mac_env env;
-
-
-
-function void build_phase (uvm_phase phase);
+function void mac_test::build_phase (uvm_phase phase);
     super.build_phase(phase);
 
     mac_seq = mac_sequence :: type_id :: create("mac_seq");
     mac_seq_known = mac_sequence_verified :: type_id :: create("mac_seq_known");
     env = mac_env :: type_id :: create("env", this);
-endfunction
-  
-  
-  task run_phase(uvm_phase phase);
+endfunction : build_phase
+
+
+task mac_test::run_phase(uvm_phase phase);
     phase.raise_objection(this, "Raised objection at test");
 
     mac_seq_known.start(env.mac_agnt.mac_sequencer);
     mac_seq.start(env.mac_agnt.mac_sequencer);
-    
+
     #100;
     phase.drop_objection(this, "Dropped objection at test");
-  endtask
-  
-  function void end_of_elaboration_phase(uvm_phase phase);
-  	    super.end_of_elaboration_phase(phase);
+endtask : run_phase
+
+function void mac_test::end_of_elaboration_phase(uvm_phase phase);
+    super.end_of_elaboration_phase(phase);
     uvm_top.print_topology();
-  endfunction
-
-  
-endclass
-
+endfunction : end_of_elaboration_phase
 
 // module tb_packetchk;
 //   mac_packet pkt;

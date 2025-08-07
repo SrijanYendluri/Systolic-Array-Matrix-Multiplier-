@@ -13,6 +13,7 @@ class mac_packet extends uvm_sequence_item;
   logic [15:0] C [0:3][0:3];
   logic completed;
   VALUES pkt_type; 
+  rand bit [5:0] delay; 
   
   
   static int pkt_number = 0;

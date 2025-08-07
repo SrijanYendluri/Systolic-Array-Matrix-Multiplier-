@@ -1,49 +1,61 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 07/31/2025 03:23:40 PM
-// Design Name: 
-// Module Name: mac_scoreboard
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 
+
+
+
+
+typedef logic [15:0] C4X4 [0:3][0:3];
+
 class mac_scoreboard extends uvm_scoreboard;
 
-`uvm_component_utils(mac_scoreboard)
+    `uvm_component_utils(mac_scoreboard)
 
-function new (string name = "mac_scoreboard", uvm_component parent = null);
+    C4X4 scb_test;
+    mac_packet mac_pkt;
+    uvm_tlm_analysis_fifo #(mac_packet) scoreboard_expo_fifo;
+    uvm_analysis_imp#(mac_packet, mac_scoreboard) scoreboard_imp;
+
+
+    extern function new (string name = "mac_scoreboard", uvm_component parent = null);
+    extern function void build_phase (uvm_phase phase);
+
+    extern function automatic C4X4 matrix_mul(
+    input logic [31:0] a [0:3],
+    input logic [31:0] b [0:3]
+    );
+
+    extern function bit compare_C_matrix(
+    input logic [15:0] C1[0:3][0:3],
+    input logic [15:0] C2[0:3][0:3]
+    );
+    
+    // extern task run_phase (uvm_phase phase);
+    extern function void write(input mac_packet packet);
+
+endclass : mac_scoreboard
+
+      
+      
+      
+      
+      
+      
+
+function mac_scoreboard::new (string name = "mac_scoreboard", uvm_component parent = null);
     super.new(name, parent);
 endfunction : new
 
-mac_packet mac_pkt;
 
-uvm_tlm_analysis_fifo #(mac_packet) scoreboard_expo_fifo;
-uvm_analysis_imp#(mac_packet, mac_scoreboard) scoreboard_imp;
-
-function void build_phase (uvm_phase phase);
-
-  scoreboard_expo_fifo = new("scoreboard_expo_fifo", this);
-  mac_pkt = mac_packet :: type_id :: create("mac_packet");
-  scoreboard_imp = new("scoreboard_imp", this);
+function void mac_scoreboard::build_phase (uvm_phase phase);
+    super.build_phase(phase);
+    scoreboard_expo_fifo = new("scoreboard_expo_fifo", this);
+    mac_pkt = mac_packet :: type_id :: create("mac_packet");
+    scoreboard_imp = new("scoreboard_imp", this);
 endfunction : build_phase
 
-typedef logic [15:0] C4X4 [0:3][0:3];
- C4X4 scb_test;
-function automatic C4X4 matrix_mul(
+function automatic C4X4 mac_scoreboard::matrix_mul(
     input logic [31:0] a [0:3],
     input logic [31:0] b [0:3]
 );
@@ -76,10 +88,10 @@ function automatic C4X4 matrix_mul(
     end
 
     return C_mat;
-endfunction
+endfunction : matrix_mul
 
 
-function bit compare_C_matrix(
+function bit mac_scoreboard::compare_C_matrix(
   input logic [15:0] C1[0:3][0:3],
   input logic [15:0] C2[0:3][0:3]
 );
@@ -91,62 +103,51 @@ function bit compare_C_matrix(
     end
   end
   return 1;
-endfunction
+endfunction : compare_C_matrix
 
-// task run_phase (uvm_phase phase);
+
+// task mac_scoreboard::run_phase (uvm_phase phase);
 //     forever begin 
-      
+//         scoreboard_expo_fifo.get(mac_pkt);
 
-//     scoreboard_expo_fifo.get(mac_pkt);
+//         if(mac_pkt.completed)begin
+        
+//         scb_test = matrix_mul(mac_pkt.A, mac_pkt.B);
 
-//     $display("checking completed");
-//     if(mac_pkt.completed)begin
-//       $display("checking completed");
-//     scb_test = matrix_mul(mac_pkt.A, mac_pkt.B);
-  
-//     if(compare_C_matrix(mac_pkt.C, scb_test)) begin
-     
-//       `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
-//     end else begin
+//         if(compare_C_matrix(mac_pkt.C, scb_test)) begin
+            
+//             `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
+//         end else begin
 
-//      `uvm_error(get_type_name(), $sformatf("Packet: %s", mac_pkt.sprint()))
-//           end
-//     $display("===============================================================================================");
-    
-//     end
+//             `uvm_error(get_type_name(), $sformatf("Packet: %s", mac_pkt.sprint()))
+//                 end
+//         $display("===============================================================================================");
+
+//         end
 
 //     end
-// endtask
+// endtask : run_phase
 
-function void write(input mac_packet packet);
 
-  
- 
+function void mac_scoreboard::write(input mac_packet packet);
+
     if(packet.completed)begin
 
-    scb_test = matrix_mul(packet.A, packet.B);
-  
-    if(compare_C_matrix(packet.C, scb_test)) begin
-     
-      `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
-    end else begin
+        scb_test = matrix_mul(packet.A, packet.B);
 
-     `uvm_error(get_type_name(), $sformatf("Not matched Packet: %s", packet.sprint()))
-          end
-    $display("===============================================================================================");
-    
+        if(compare_C_matrix(packet.C, scb_test)) begin
+
+            `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
+        end else begin
+
+            `uvm_error(get_type_name(), $sformatf("Not matched Packet: %s", packet.sprint()))
+        end
+
+        $display("===============================================================================================");
+
     end else begin 
-      `uvm_error(get_type_name(), $sformatf("Completed never went high \n Packet : %0s ",packet.sprint()) )
+        `uvm_error(get_type_name(), $sformatf("Completed never went high \n Packet : %0s ",packet.sprint()) )
 
     end
 
-
-
 endfunction : write
-
-
-
-
-
-
-endclass

@@ -42,8 +42,9 @@ class mac_sequence_verified extends uvm_sequence #(mac_packet);
 
     repeat(2) begin 
       `uvm_create(mpk)
-
+		
       start_item(mpk);
+	      mpk.randomize();
           mpk.st_rst = 0;
           mpk.A[0] = {8'd1, 8'd2, 8'd3, 8'd4};
           mpk.A[1] = {8'd5, 8'd6, 8'd7, 8'd8};

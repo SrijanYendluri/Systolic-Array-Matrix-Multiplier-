@@ -4,17 +4,32 @@ import uvm_pkg :: *;
 
 
 class mac_monitor extends uvm_monitor;
-  `uvm_component_utils(mac_monitor)
-  
-  function new (string name = "mac_monitor", uvm_component parent = null);
-    super.new(name, parent);
-  endfunction
-  
-  mac_packet macpkt, temp_pkt;
-  uvm_analysis_port#(mac_packet) mac_analysis_port;
-  virtual sc_if scif;
+    
+    `uvm_component_utils(mac_monitor)
 
-  function void build_phase (uvm_phase phase);
+    mac_packet macpkt, temp_pkt;
+    uvm_analysis_port#(mac_packet) mac_analysis_port;
+    virtual sc_if scif;
+
+    extern function new (string name = "mac_monitor", uvm_component parent = null);
+    extern function void build_phase (uvm_phase phase);
+    extern task run_phase (uvm_phase phase);
+
+
+endclass : mac_monitor
+
+      
+      
+      
+      
+
+function mac_monitor::new (string name = "mac_monitor", uvm_component parent = null);
+    super.new(name, parent);
+endfunction : new
+
+
+
+function void mac_monitor::build_phase (uvm_phase phase);
     super.build_phase(phase);
 
     mac_analysis_port = new("mac_analysis_port",this);
@@ -23,26 +38,24 @@ class mac_monitor extends uvm_monitor;
 
     assert(uvm_config_db#(virtual sc_if)::get(this,"interface","scif",scif)) else 
     begin 
-      `uvm_error(get_type_name(), "Interfaces did not init") 
-        end
-
-  endfunction : build_phase
-
-  task run_phase (uvm_phase phase);
-    forever begin 
-        @(posedge scif.completed);
-        macpkt.st_rst = scif.st_rst;
-        macpkt.A = scif.A;
-        macpkt.B = scif.B;
-        macpkt.completed = scif.completed;
-        macpkt.C = scif.C;
-        $cast(temp_pkt, macpkt.clone());
-        mac_analysis_port.write(temp_pkt);
-        #1;
-      // `uvm_info(get_type_name(), $sformatf("sent to scoreboard: %0s", macpkt.sprint()), UVM_NONE);
+    `uvm_error(get_type_name(), "Interfaces did not init") 
     end
-  endtask 
+
+endfunction : build_phase
+
+
+task mac_monitor::run_phase (uvm_phase phase);
+    forever begin 
+    @(posedge scif.completed);
+    macpkt.st_rst = scif.st_rst;
+    macpkt.A = scif.A;
+    macpkt.B = scif.B;
+    macpkt.completed = scif.completed;
+    macpkt.C = scif.C;
+    $cast(temp_pkt, macpkt.clone());
+    mac_analysis_port.write(temp_pkt);
+    #1;
+    // `uvm_info(get_type_name(), $sformatf("sent to scoreboard: %0s", macpkt.sprint()), UVM_NONE);
+    end
+endtask : run_phase
   
-  
-  
-endclass
