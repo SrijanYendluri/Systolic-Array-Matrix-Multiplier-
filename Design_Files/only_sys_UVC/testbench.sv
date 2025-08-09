@@ -38,10 +38,15 @@ endfunction : build_phase
 task mac_test::run_phase(uvm_phase phase);
     phase.raise_objection(this, "Raised objection at test");
 
-    mac_seq_known.start(env.mac_agnt.mac_sequencer);
-    mac_seq.start(env.mac_agnt.mac_sequencer);
+  while (env.mac_scb.mux_coverage.get_coverage() < 90) begin 
 
+//     mac_seq_known.start(env.mac_agnt.mac_sequencer);
+    mac_seq.start(env.mac_agnt.mac_sequencer);
+    
+  end
+   
     #100;
+
     phase.drop_objection(this, "Dropped objection at test");
 endtask : run_phase
 

@@ -46,7 +46,7 @@ endfunction : build_phase
 task mac_driver::drive_dut(mac_packet mp); 
 	#mp.delay;
     @(posedge scif.clk);
-    `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
+//    `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
     scif.st_rst <= mp.st_rst;
     scif.A <= mp.A;
     scif.B <= mp.B;
@@ -54,7 +54,7 @@ task mac_driver::drive_dut(mac_packet mp);
     scif.st_rst <= 1'b1;
     @(posedge scif.clk);
 
-    $display("===============================================================================================");
+//    $display("===============================================================================================");
     // `uvm_info(get_type_name(), $sformatf("trns %s", mp.sprint()),UVM_NONE);
 
 endtask : drive_dut

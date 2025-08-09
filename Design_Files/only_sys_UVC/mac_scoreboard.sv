@@ -13,11 +13,97 @@ class mac_scoreboard extends uvm_scoreboard;
     `uvm_component_utils(mac_scoreboard)
 
     C4X4 scb_test;
-    mac_packet mac_pkt;
+    mac_packet mac_pkt, cov_pkt;
     uvm_tlm_analysis_fifo #(mac_packet) scoreboard_expo_fifo;
     uvm_analysis_imp#(mac_packet, mac_scoreboard) scoreboard_imp;
 
-
+	int failed;
+  	int passed;
+  	int x,y;
+  
+  covergroup mux_coverage;
+    
+    MA0 : coverpoint cov_pkt.A[0] {
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MA1 : coverpoint  cov_pkt.A[1] {
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MA2 : coverpoint cov_pkt.A[2]{
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MA3 : coverpoint  cov_pkt.A[3]{
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    
+    MB0 : coverpoint cov_pkt.B[0] {
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MB1 : coverpoint  cov_pkt.B[1] {
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MB2 : coverpoint cov_pkt.B[2]{
+      ignore_bins e_th_bit = {[128:255]};
+    }
+    MB3 : coverpoint  cov_pkt.B[3]{
+      ignore_bins e_th_bit = {[128:255]};
+    }
+	
+ 
+    coverpoint cov_pkt.C[0][0] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[0][1] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[0][2] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[0][3] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[1][0] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[1][1] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[1][2] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[1][3] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[2][0] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[2][1] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[2][2] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[2][3] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[3][0] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[3][1] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[3][2] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+    coverpoint cov_pkt.C[3][3] {
+      ignore_bins ignore_range = {[64516:65535]};
+    }
+	
+  endgroup
+    
+   
+  	
+  
     extern function new (string name = "mac_scoreboard", uvm_component parent = null);
     extern function void build_phase (uvm_phase phase);
 
@@ -33,6 +119,7 @@ class mac_scoreboard extends uvm_scoreboard;
     
     // extern task run_phase (uvm_phase phase);
     extern function void write(input mac_packet packet);
+    extern function void report_phase (uvm_phase phase);
 
 endclass : mac_scoreboard
 
@@ -45,6 +132,7 @@ endclass : mac_scoreboard
 
 function mac_scoreboard::new (string name = "mac_scoreboard", uvm_component parent = null);
     super.new(name, parent);
+  	mux_coverage = new;
 endfunction : new
 
 
@@ -52,6 +140,7 @@ function void mac_scoreboard::build_phase (uvm_phase phase);
     super.build_phase(phase);
     scoreboard_expo_fifo = new("scoreboard_expo_fifo", this);
     mac_pkt = mac_packet :: type_id :: create("mac_packet");
+  	cov_pkt = mac_packet :: type_id :: create("cov_pkt");
     scoreboard_imp = new("scoreboard_imp", this);
 endfunction : build_phase
 
@@ -132,18 +221,22 @@ endfunction : compare_C_matrix
 function void mac_scoreboard::write(input mac_packet packet);
 
     if(packet.completed)begin
-
+      	cov_pkt.copy(packet);
         scb_test = matrix_mul(packet.A, packet.B);
 
         if(compare_C_matrix(packet.C, scb_test)) begin
 
-            `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
+//            `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
+          	mux_coverage.sample();
+          	passed++;
+            `uvm_info(get_type_name(), $sformatf("curr Coverage value:  %0f", mux_coverage.get_coverage()), UVM_NONE)
         end else begin
 
             `uvm_error(get_type_name(), $sformatf("Not matched Packet: %s", packet.sprint()))
+          failed ++;
         end
 
-        $display("===============================================================================================");
+//        $display("===============================================================================================");
 
     end else begin 
         `uvm_error(get_type_name(), $sformatf("Completed never went high \n Packet : %0s ",packet.sprint()) )
@@ -151,3 +244,17 @@ function void mac_scoreboard::write(input mac_packet packet);
     end
 
 endfunction : write
+      
+      
+      
+      
+      
+
+function void mac_scoreboard :: report_phase (uvm_phase phase);
+
+  `uvm_info(get_type_name(), $sformatf("Number of Faliure trnx: %0d", failed), UVM_NONE)
+  `uvm_info(get_type_name(), $sformatf("Number of Successful trnx: %0d", passed), UVM_NONE)
+  `uvm_info(get_type_name(), $sformatf("Coverage value:  %0f", mux_coverage.get_coverage()), UVM_NONE)
+
+endfunction : report_phase
+
