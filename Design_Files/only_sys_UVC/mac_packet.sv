@@ -56,13 +56,13 @@ class mac_packet extends uvm_sequence_item;
   
   int a_j;
   int b_j;
-  constraint a_values {foreach(A[a_j]) A[a_j] inside {[32'd0:32'h81818181]};}
-  constraint b_values {foreach(B[b_j]) B[b_j] inside {[32'd0:32'h81818181]};}
+  constraint a_values {foreach(A[a_j]) A[a_j] inside {[32'd0:32'h7f_7f_7f_7f]};}
+  constraint b_values {foreach(B[b_j]) B[b_j] inside {[32'd0:32'h7f_7f_7f_7f]};}
   
   int a_k;
   int b_k;
-  constraint a_values_e {foreach(A[a_k]) A[a_k] inside {[32'h5a_5a_5a_5a: 32'hff_ff_ff_ff]};}
-  constraint b_values_e {foreach(B[b_k]) B[b_k] inside {[32'h5a_5a_5a_5a: 32'hff_ff_ff_ff]};}
+  constraint a_values_e {foreach(A[a_k]) A[a_k] inside {[32'h80_80_80_80: 32'hff_ff_ff_ff]};}
+  constraint b_values_e {foreach(B[b_k]) B[b_k] inside {[32'h80_80_80_80: 32'hff_ff_ff_ff]};}
   
   function void pre_randomize();
 

@@ -23,31 +23,32 @@ class mac_scoreboard extends uvm_scoreboard;
   
   covergroup mux_coverage;
     
-    MA0 : coverpoint cov_pkt.A[0] {
-      ignore_bins e_th_bit = {[128:255]};
+    MA0 : coverpoint logic'(cov_pkt.A[0]) {
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MA1 : coverpoint  cov_pkt.A[1] {
-      ignore_bins e_th_bit = {[128:255]};
+    MA1 : coverpoint  logic'(cov_pkt.A[1]) {
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MA2 : coverpoint cov_pkt.A[2]{
-      ignore_bins e_th_bit = {[128:255]};
+    MA2 : coverpoint logic'(cov_pkt.A[2]){
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MA3 : coverpoint  cov_pkt.A[3]{
-      ignore_bins e_th_bit = {[128:255]};
+    MA3 : coverpoint  logic'(cov_pkt.A[3]){
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
     
-    MB0 : coverpoint cov_pkt.B[0] {
-      ignore_bins e_th_bit = {[128:255]};
+    MB0 : coverpoint logic'(cov_pkt.B[0]) {
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MB1 : coverpoint  cov_pkt.B[1] {
-      ignore_bins e_th_bit = {[128:255]};
+    MB1 : coverpoint  logic'(cov_pkt.B[1]) {
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MB2 : coverpoint cov_pkt.B[2]{
-      ignore_bins e_th_bit = {[128:255]};
+    MB2 : coverpoint logic'(cov_pkt.B[2]){
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
-    MB3 : coverpoint  cov_pkt.B[3]{
-      ignore_bins e_th_bit = {[128:255]};
+    MB3 : coverpoint  logic'(cov_pkt.B[3]){
+      ignore_bins e_th_bit = {[32'h80_80_80_80: 32'hff_ff_ff_ff]};
     }
+	
 	
  
     coverpoint cov_pkt.C[0][0] {
@@ -226,17 +227,17 @@ function void mac_scoreboard::write(input mac_packet packet);
 
         if(compare_C_matrix(packet.C, scb_test)) begin
 
-//            `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_NONE)
+          `uvm_info(get_type_name(), $sformatf("Test passed"),UVM_HIGH)
           	mux_coverage.sample();
           	passed++;
-            `uvm_info(get_type_name(), $sformatf("curr Coverage value:  %0f", mux_coverage.get_coverage()), UVM_NONE)
+            `uvm_info(get_type_name(), $sformatf("Coverage : %0f ", mux_coverage.get_coverage()), UVM_FULL);
         end else begin
 
             `uvm_error(get_type_name(), $sformatf("Not matched Packet: %s", packet.sprint()))
           failed ++;
         end
 
-//        $display("===============================================================================================");
+         `uvm_info(get_type_name(),"===============================================================================================",UVM_HIGH);
 
     end else begin 
         `uvm_error(get_type_name(), $sformatf("Completed never went high \n Packet : %0s ",packet.sprint()) )

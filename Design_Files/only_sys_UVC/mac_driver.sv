@@ -33,7 +33,7 @@ endfunction : new
 //================================================================================
 function void mac_driver::build_phase(uvm_phase phase);
     super.build_phase(phase);
-    `uvm_info(get_type_name(), "Build PHASE", UVM_NONE);
+  `uvm_info(get_type_name(), "Build PHASE", UVM_DEBUG);
     //     mac_sequrencer = uvm_sequencer#(mac_packet) :: type_id :: create("mac_sequencer", this);
 
     assert(uvm_config_db#(virtual sc_if) :: get(this,"interface","scif", scif)) else begin 
@@ -46,7 +46,7 @@ endfunction : build_phase
 task mac_driver::drive_dut(mac_packet mp); 
 	#mp.delay;
     @(posedge scif.clk);
-//    `uvm_info(get_type_name(), "Driving DUT", UVM_NONE);
+  `uvm_info(get_type_name(), "Driving DUT", UVM_HIGH);
     scif.st_rst <= mp.st_rst;
     scif.A <= mp.A;
     scif.B <= mp.B;
@@ -54,7 +54,7 @@ task mac_driver::drive_dut(mac_packet mp);
     scif.st_rst <= 1'b1;
     @(posedge scif.clk);
 
-//    $display("===============================================================================================");
+     `uvm_info(get_type_name(),"===============================================================================================",UVM_DEBUG);
     // `uvm_info(get_type_name(), $sformatf("trns %s", mp.sprint()),UVM_NONE);
 
 endtask : drive_dut

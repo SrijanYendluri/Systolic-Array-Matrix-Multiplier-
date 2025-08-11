@@ -10,7 +10,7 @@ class mac_sequence extends uvm_sequence #(mac_packet);
   
   task body();
     mac_packet mpk;
-//    `uvm_info(get_type_name(),"Sequence started",UVM_NONE);
+    `uvm_info(get_type_name(),"Sequence started",UVM_DEBUG);
 
 //     repeat(20) begin 
       `uvm_do_with(mpk, {mpk.st_rst == 0;})
@@ -38,7 +38,7 @@ class mac_sequence_verified extends uvm_sequence #(mac_packet);
   
   task body();
     mac_packet mpk;
-    `uvm_info(get_type_name(),"Sequence started",UVM_NONE);
+    `uvm_info(get_type_name(),"Sequence started",UVM_DEBUG);
 
     repeat(2) begin 
       `uvm_create(mpk)

@@ -38,7 +38,7 @@ endfunction : build_phase
 task mac_test::run_phase(uvm_phase phase);
     phase.raise_objection(this, "Raised objection at test");
 
-  while (env.mac_scb.mux_coverage.get_coverage() < 90) begin 
+  while (env.mac_scb.mux_coverage.get_coverage() < 100) begin 
 
 //     mac_seq_known.start(env.mac_agnt.mac_sequencer);
     mac_seq.start(env.mac_agnt.mac_sequencer);
@@ -92,7 +92,7 @@ module tb_driver();
   initial begin 
     
     uvm_config_db#(virtual sc_if)::set(null,"*.interface","scif",scif);
-     
+    uvm_top.set_report_verbosity_level(UVM_FULL);
     run_test("mac_test");
     
   end
