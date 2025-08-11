@@ -32,3 +32,6 @@ https://github.com/user-attachments/assets/ab6f93d4-f7ec-4b46-a643-3ef21457dc1b
 
 ## Systollic array UVC
 ![Drawing 2025-07-30 10 59 49 excalidraw](https://github.com/user-attachments/assets/f1acf7d0-6aad-4292-9a58-dcf4aa1be77d)
+
+<img width="1600" height="426" alt="{FC24D8CF-D180-4263-B008-D5A69290EE3E}" src="https://github.com/user-attachments/assets/630293e8-d7df-4a69-8c8c-ce6d4953fe75" />
+
