@@ -12,7 +12,8 @@
   - All the .sv and constraint files seperately provided
   - mac_UVC
     -  EDA Playground : https://edaplayground.com/x/ZJis
-    -  .sv files also avaliable for the UVC 
+    -  .sv files also avaliable for the UVC
+    -  Test bench achieve 100% functional coverage in 1.33 min and 163345 transactions  
 - Test_Bench.py
   - run this once the FPGA is ready and comports are connected    
 - fpga_frimware.py
