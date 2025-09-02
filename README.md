@@ -29,7 +29,7 @@
 - example_use.py
   - clean example to show you how it works
 
-Since this is an active personal project it is only 4X4 matrix and only 8 bits for now I aim to impliment more complex protocols as I learn.  
+Since this is an active personal project it is only 4X4 matrix and only 8 bits for now I aim to impliment more complex protocol as I learn (internal: ABP, AHB, AXI ... etc, External: I2C ..etc).  
 
 
 ## Tiny Demo 
